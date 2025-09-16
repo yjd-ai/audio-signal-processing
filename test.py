@@ -1,0 +1,124 @@
+import tkinter as tk
+from tkinter import ttk
+import numpy as np
+import matplotlib.pyplot as plt
+#==自定义函数==================
+def drawFunc():
+    A = float(amplitude_entry.get())
+    P = float(phase_entry.get())
+    Fs = float(frequency_entry.get())
+
+#==控件回调函数=================
+def scalFunc(value, entry):
+    entry.delete(0, tk.END)
+    entry.insert(0, f"{float(value):.1f}")
+    return value
+
+def entryFunc(e, scale):
+    value = float(e.widget.get())
+    if scale['from'] <= value <= scale['to']:
+        scale.set(value)
+
+# 建立tkinter GUI 窗口==============
+root = tk.Tk()
+root.geometry('1200x330')
+root.config(bg="#ebe9d5")
+root.wm_title('可调正弦波信号')
+
+# Insert a frame============
+param_frame = tk.Frame(root, bd=2, bg = '#ebe9d5', highlightbackground = "black", highlightthickness = 0.5)
+param_frame.place(x=40, y=40, width=350, height=250)
+
+# Insert a label==================
+frame_title_label = tk.Label(root, text="参数设置", font=("SimHei", 15), bg = '#ebe9d5', fg="blue")
+frame_title_label.place(x=60, y=30)
+
+# Insert three labels============
+amplitude_label = tk.Label(root, text = '幅值',  bg = '#ebe9d5', font=('SimHei', 12), fg="#324e35")
+amplitude_label.place(x=50,y=80,width=100,height=32)
+
+phase_label = tk.Label(root, text = '初始相位',  bg = '#ebe9d5', font=('SimHei', 12), fg="#324e35")
+phase_label.place(x=50,y=150,width=100,height=32)
+
+frequency_label = tk.Label(root, text = '频率',  bg = '#ebe9d5', font=('SimHei', 12), fg="#324e35")
+frequency_label.place(x=50,y=220,width=100,height=32)
+
+# Insert three scales
+amplitude_svar=tk.DoubleVar()
+amplitude_scale=tk.Scale(
+    root,
+    variable=amplitude_svar,
+    from_=0,
+    to=1,
+    resolution = 0.1,
+    orient=tk.HORIZONTAL,
+    font=("SimHei", 8),
+    bg = '#ebe9d5')
+amplitude_scale.place(x=150,y=80,width=150,height=35)
+amplitude_scale.set(1)
+
+phase_svar=tk.DoubleVar()
+phase_scale=tk.Scale(
+    root,
+    variable=phase_svar,
+    from_=0,
+    to=180,
+    resolution = 1,
+    orient=tk.HORIZONTAL,
+    font=("SimHei", 8),
+    bg = '#ebe9d5')
+phase_scale.place(x=150,y=150,width=150,height=35)
+
+frequency_svar=tk.DoubleVar()
+frequency_scale=tk.Scale(
+    root,
+    variable=frequency_svar,
+    from_=100, to=2000,
+    resolution = 1,
+    orient=tk.HORIZONTAL,
+    font=("SimHei", 8),
+    bg = '#ebe9d5')
+frequency_scale.place(x=150,y=220,width=150,height=35)
+frequency_scale.set(100)
+
+# Insert three entries
+amplitude_entry_var=tk.StringVar()
+amplitude_entry=tk.Entry(root,textvariable=amplitude_entry_var)
+amplitude_entry.place(x=320,y=80,width=50,height=32)
+
+phase_entry_var=tk.StringVar()
+phase_entry=tk.Entry(root,textvariable=phase_entry_var)
+phase_entry.place(x=320,y=150,width=50,height=32)
+
+frequency_entry_var=tk.StringVar()
+frequency_entry=tk.Entry(root,textvariable=frequency_entry_var)
+frequency_entry.place(x=320,y=220,width=50,height=32)
+
+
+#=绑定滑块和输入框==================
+amplitude_scale.config(
+    command=lambda val: scalFunc(val, amplitude_entry)
+)
+amplitude_entry.bind(
+    "<Return>",
+    lambda e: entryFunc(e, amplitude_scale)
+)
+
+phase_scale.config(
+    command=lambda val: scalFunc(val, phase_entry)
+)
+phase_entry.bind(
+    "<Return>",
+    lambda e: entryFunc(e, phase_scale)
+)
+
+frequency_scale.config(
+    command=lambda val: scalFunc(val, frequency_entry)
+)
+frequency_entry.bind(
+    "<Return>",
+    lambda e: entryFunc(e, frequency_scale)
+)
+
+#=Tkinter主窗口循环控制==============
+root.mainloop()
